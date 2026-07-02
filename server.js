@@ -151,22 +151,21 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       const keywords = productName ? generateKeywords(productName) : "";
 
       return {
-        ...row,
+        SKU: row.SKU,
         "Product Name": productName,
-        "Keywords": keywords,
+        name: keywords,
+        size: row.Size,
         "Match Status": productName ? "Matched" : "Not Found"
       };
     });
 
-    const inputColumns = Object.keys(stockRows[0] || {}).filter(col => col !== "Size");
-
-    const allColumns = Array.from(new Set([
-      ...inputColumns,
+    const allColumns = [
+      "SKU",
       "Product Name",
-      "Keywords",
-      "Size",
+      "name",
+      "size",
       "Match Status"
-    ]));
+    ];
 
     const output = stringify(enriched, {
       header: true,
