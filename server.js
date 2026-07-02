@@ -38,134 +38,43 @@ function removeBrand(productName) {
 }
 
 function generateKeywords(productName) {
-  const original = cleanText(productName);
-  if (!original) return "";
+  let name = cleanText(productName);
+  if (!name) return "";
 
-  let name = removeBrand(original);
-
-  // Remove gender/kids descriptors that are usually not needed in short keywords.
   name = name
+    .replace(/^(adidas|nike|air jordan|jordan|new balance|asics|ugg)\s+/i, "")
     .replace(/\bWomen'?s\b/gi, "")
     .replace(/\bMens\b/gi, "")
     .replace(/\bMen'?s\b/gi, "")
     .replace(/\bGS\b/gi, "")
     .replace(/\bPS\b/gi, "")
     .replace(/\bTD\b/gi, "")
+    .replace(/\bOG\b/gi, "")
+    .replace(/\bRetro\b/gi, "")
+    .replace(/\b202[0-9]\b/g, "")
     .replace(/\s+/g, " ")
     .trim();
 
-  const lower = name.toLowerCase();
+  let keywords = name;
 
-  // Specific model simplifications.
-  const rules = [
-    {
-      match: /samba og/i,
-      build: () => {
-        if (/core black/i.test(name)) return "samba core black";
-        if (/cloud white/i.test(name)) return "samba cloud white";
-        return "samba";
-      }
-    },
-    {
-      match: /samba jane/i,
-      build: () => {
-        if (/white black/i.test(name)) return "samba jane white black";
-        return "samba jane";
-      }
-    },
-    {
-      match: /gel[- ]?1130/i,
-      build: () => {
-        if (/pure silver/i.test(name)) return "1130 pure silver";
-        return "1130";
-      }
-    },
-    {
-      match: /dunk low/i,
-      build: () => {
-        let kw = "dunk low";
-        if (/next nature/i.test(name)) kw += " next nature";
-        if (/aster pink/i.test(name)) kw += " aster pink";
-        return kw;
-      }
-    },
-    {
-      match: /jordan 1 retro high.*bred/i,
-      build: () => "jordan 1 high bred"
-    },
-    {
-      match: /jordan 4 retro.*navy/i,
-      build: () => "jordan 4 sb navy"
-    },
-    {
-      match: /new balance 740/i,
-      build: () => "740 navy white"
-    },
-    {
-      match: /new balance 1906a/i,
-      build: () => "1906a tech explosion"
-    },
-    {
-      match: /\b1906\b/i,
-      build: () => {
-        if (/tech explosion/i.test(name)) return "1906 tech explosion";
-        return "1906";
-      }
-    },
-    {
-      match: /\b9060\b/i,
-      build: () => {
-        const words = lower.split(" ");
-        const colorWords = words.filter(w => !["new","balance","9060"].includes(w));
-        return ["9060", ...colorWords.slice(0, 3)].join(" ");
-      }
-    }
-  ];
-
-  let keywords = "";
-
-  for (const rule of rules) {
-    if (rule.match.test(name)) {
-      keywords = rule.build();
-      break;
-    }
+  if (/samba/i.test(name)) {
+    keywords = name.replace(/samba/i, "samba");
+  } else if (/gel[- ]?1130/i.test(name)) {
+    keywords = name.replace(/gel[- ]?1130/i, "1130");
+  } else if (/gel[- ]?kayano 14/i.test(name)) {
+    keywords = name.replace(/gel[- ]?kayano 14/i, "kayano");
+  } else if (/gel[- ]?nyc/i.test(name)) {
+    keywords = name.replace(/gel[- ]?nyc/i, "nyc");
+  } else if (/gel[- ]?cumulus 16/i.test(name)) {
+    keywords = name.replace(/gel[- ]?cumulus 16/i, "cumulus");
   }
 
-  // Generic fallback: remove common filler words, keep strongest words short.
-  if (!keywords) {
-    const stopWords = new Set([
-      "og", "retro", "high", "low", "mid", "shoe", "shoes",
-      "white", "black", "grey", "gray", "blue", "red", "green",
-      "core", "cloud", "pure"
-    ]);
-
-    const words = name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s.-]/g, " ")
-      .split(/\s+/)
-      .filter(Boolean);
-
-    // Keep model-like words and important color/style words.
-    const keep = [];
-    for (const word of words) {
-      if (keep.length >= 5) break;
-      if (/^[a-z]*\d+[a-z]*$/.test(word) || !stopWords.has(word)) {
-        keep.push(word);
-      }
-    }
-
-    keywords = keep.join(" ");
-  }
-
-  keywords = keywords
+  return keywords
     .toLowerCase()
     .replace(/[^a-z0-9.\s/-]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-
-  return keywords;
 }
-
 async function fetchSkuMasterMap() {
   const skuMap = new Map();
   let offset = null;
@@ -249,10 +158,13 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       };
     });
 
+    const inputColumns = Object.keys(stockRows[0] || {}).filter(col => col !== "Size");
+
     const allColumns = Array.from(new Set([
-      ...Object.keys(stockRows[0] || {}),
+      ...inputColumns,
       "Product Name",
       "Keywords",
+      "Size",
       "Match Status"
     ]));
 
