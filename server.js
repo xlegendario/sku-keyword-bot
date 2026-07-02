@@ -37,7 +37,7 @@ function removeBrand(productName) {
     .replace(/^air jordan\s+/i, "Jordan ");
 }
 
-function generateKeywords(productName, size) {
+function generateKeywords(productName) {
   const original = cleanText(productName);
   if (!original) return "";
 
@@ -163,11 +163,7 @@ function generateKeywords(productName, size) {
     .replace(/\s+/g, " ")
     .trim();
 
-  if (size) {
-    keywords += ` ${String(size).trim()}`;
-  }
-
-  return keywords.trim();
+  return keywords;
 }
 
 async function fetchSkuMasterMap() {
@@ -243,7 +239,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const enriched = stockRows.map((row) => {
       const key = row.SKU.trim().toUpperCase();
       const productName = skuMap.get(key) || "";
-      const keywords = productName ? generateKeywords(productName, row.Size) : "";
+      const keywords = productName ? generateKeywords(productName) : "";
 
       return {
         ...row,
