@@ -37,8 +37,14 @@ function removeBrand(productName) {
     .replace(/^air jordan\s+/i, "Jordan ");
 }
 
+function normalizeAccents(text) {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 function generateKeywords(productName) {
-  let name = cleanText(productName);
+  let name = normalizeAccents(cleanText(productName));
   if (!name) return "";
 
   name = name
