@@ -1,7 +1,7 @@
 {
-  "name": "sku-product-name-bot",
-  "version": "1.0.0",
-  "description": "Upload a stock CSV and enrich it with Product Name from Airtable SKU Master.",
+  "name": "sku-product-name-keyword-bot",
+  "version": "1.1.0",
+  "description": "Upload stock CSV, enrich with Airtable Product Name and generate keywords.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
