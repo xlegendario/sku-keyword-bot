@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SKU Product Name Bot</title>
+  <title>SKU Keyword Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
       padding: 40px;
     }
     .card {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       background: #111827;
       border: 1px solid #334155;
@@ -31,10 +31,7 @@
       margin-top: 12px;
       font-size: 16px;
     }
-    input {
-      background: #020617;
-      color: #e5e7eb;
-    }
+    input { background: #020617; color: #e5e7eb; }
     button {
       background: #f5c542;
       color: #111827;
@@ -44,23 +41,25 @@
     }
     button:hover { opacity: .9; }
     .small { font-size: 13px; color: #94a3b8; }
+    code { color: #f5c542; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>SKU Product Name Bot</h1>
+    <h1>SKU Keyword Generator</h1>
     <p>
-      Upload je stock CSV met kolommen <b>SKU</b> en <b>Size</b>.
-      De bot zoekt de SKU in Airtable SKU Master en downloadt automatisch een nieuwe CSV met <b>Product Name</b>.
+      Upload een CSV met minimaal <code>SKU</code> en <code>Size</code>.
+      De tool zoekt de Product Name in Airtable en geeft een CSV terug met extra kolommen:
+      <code>Product Name</code>, <code>Keywords</code> en <code>Match Status</code>.
     </p>
 
     <form action="/upload" method="post" enctype="multipart/form-data">
       <input type="file" name="file" accept=".csv" required />
-      <button type="submit">Upload & Download Enriched CSV</button>
+      <button type="submit">Upload & Download CSV</button>
     </form>
 
     <p class="small">
-      Output kolommen: SKU, Size, Product Name, Match Status.
+      Voorbeeld output keyword: “samba core black 43” of “1906a tech explosion 42.5”.
     </p>
   </div>
 </body>
