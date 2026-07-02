@@ -1,10 +1,14 @@
-# SKU Product Name Bot
+# SKU Product Name + Keyword Bot
 
-Upload een stock CSV en verrijk deze met `Product Name` uit je Airtable `SKU Master` table.
+Upload een CSV met `SKU` en `Size`.
 
-## CSV input
+De app:
+1. Zoekt SKU in Airtable `SKU Master`
+2. Haalt `Product Name` op
+3. Genereert korte keywords
+4. Downloadt nieuwe CSV
 
-Je CSV moet minimaal deze kolommen hebben:
+## Input CSV
 
 ```csv
 SKU,Size
@@ -12,57 +16,33 @@ GX3791,42
 HQ7045,38 2/3
 ```
 
-## Airtable env vars
+## Output CSV
 
-Zet deze in Render bij **Environment**:
+```csv
+SKU,Size,Product Name,Keywords,Match Status
+GX3791,42,adidas Samba OG Cloud White Core Black,samba core black 42,Matched
+```
 
-```bash
-AIRTABLE_TOKEN=pat_xxxxxxxxxxxxxxxxx
-AIRTABLE_BASE_ID=appxxxxxxxxxxxxxx
+## Render env vars
+
+```env
+AIRTABLE_TOKEN=pat_xxx
+AIRTABLE_BASE_ID=appxxx
 AIRTABLE_SKU_MASTER_TABLE=SKU Master
 AIRTABLE_SKU_FIELD=SKU
 AIRTABLE_PRODUCT_NAME_FIELD=Product Name
 ```
 
-Als jouw Airtable velden anders heten, pas alleen deze aan:
+## Render settings
 
-```bash
-AIRTABLE_SKU_FIELD=...
-AIRTABLE_PRODUCT_NAME_FIELD=...
-```
-
-## Local run
-
-```bash
-npm install
-cp .env.example .env
-npm start
-```
-
-Open daarna:
-
-```txt
-http://localhost:3000
-```
-
-## Deploy op Render
-
-1. Maak nieuwe GitHub repo.
-2. Upload deze files.
-3. Render → New → Web Service.
-4. Connect GitHub repo.
-5. Runtime: Node.
-6. Build Command:
+Build command:
 
 ```bash
 npm install
 ```
 
-7. Start Command:
+Start command:
 
 ```bash
 npm start
 ```
-
-8. Zet de env vars in Render.
-9. Deploy.
