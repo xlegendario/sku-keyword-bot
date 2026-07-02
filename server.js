@@ -73,6 +73,8 @@ function generateKeywords(productName) {
     keywords = name.replace(/gel[- ]?nyc/i, "nyc");
   } else if (/gel[- ]?cumulus 16/i.test(name)) {
     keywords = name.replace(/gel[- ]?cumulus 16/i, "cumulus");
+  } else if (/yeezy boost 350 v2/i.test(name)) {
+    keywords = name.replace(/yeezy boost 350 v2/i, "350");
   }
 
   return keywords
