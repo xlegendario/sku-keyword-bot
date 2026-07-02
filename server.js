@@ -65,16 +65,26 @@ function generateKeywords(productName) {
 
   if (/samba/i.test(name)) {
     keywords = name.replace(/samba/i, "samba");
+  
   } else if (/gel[- ]?1130/i.test(name)) {
     keywords = name.replace(/gel[- ]?1130/i, "1130");
+  
   } else if (/gel[- ]?kayano 14/i.test(name)) {
     keywords = name.replace(/gel[- ]?kayano 14/i, "kayano");
+  
   } else if (/gel[- ]?nyc/i.test(name)) {
     keywords = name.replace(/gel[- ]?nyc/i, "nyc");
+  
   } else if (/gel[- ]?cumulus 16/i.test(name)) {
     keywords = name.replace(/gel[- ]?cumulus 16/i, "cumulus");
-  } else if (/yeezy boost 350 v2/i.test(name)) {
-    keywords = name.replace(/yeezy boost 350 v2/i, "350");
+  
+  } else if (/yeezy/i.test(name)) {
+    keywords = name
+      .replace(/\byeezy\b/gi, "")
+      .replace(/\bboost\b/gi, "")
+      .replace(/\bv2\b/gi, "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   return keywords
@@ -83,6 +93,7 @@ function generateKeywords(productName) {
     .replace(/\s+/g, " ")
     .trim();
 }
+
 async function fetchSkuMasterMap() {
   const skuMap = new Map();
   let offset = null;
